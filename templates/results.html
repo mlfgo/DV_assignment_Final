@@ -1,0 +1,25 @@
+{% extends 'partials/layout.html' %}
+
+{% block content %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Text</th>
+          <th scope="col">Score</th>
+      </thead>
+      <tbody>
+          {% for tweet in query %}
+            <div>
+                <td>{{ tweet[0] }}</td>
+                <td>{{ tweet[1] }}</td>
+            </div>
+            </tr>
+{#            <hr/>#}
+          {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}
+
+
+
+

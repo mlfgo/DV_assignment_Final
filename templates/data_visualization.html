@@ -1,0 +1,143 @@
+{% extends 'partials/layout.html' %}
+
+{% block dv%}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+
+    </p>
+</figure>
+
+
+<!-- Data from www.netmarketshare.com. Select Browsers => Desktop share by version. Download as tsv. -->
+<script>
+// Create the chart
+Highcharts.chart('container', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: '{{ title }}'
+    },
+    subtitle: {
+        text: 'Click slides to know the re-tweet impact'
+    },
+
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        },
+        point: {
+            valueSuffix: ''
+        }
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                format: '{point.name}: {point.y:.1f}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> <br/>'
+    },
+
+    series: [
+        {
+            name: "Browsers",
+            colorByPoint: true,
+            data: [
+                {% for k,v in result_dict.items() %}
+                    {
+                        name: "{{ k }}",
+                         y: {{ v }},
+                        drilldown: "{{ k }}"
+                    },
+                {% endfor %}
+            ]
+        }
+    ],
+    drilldown: {
+        series: [
+            {
+              name:"GOOD",
+              id: "GOOD",
+              data:[
+                  {% if retweet_dict_good is defined and retweet_dict_good|length %}
+
+                          [
+                              "GOOD",
+                              {{ retweet_dict_good.get("GOOD") }}
+                          ],
+                          [
+                              "Null",
+                              {{ retweet_dict_not_worked }}
+                          ]
+
+                  {% endif %}
+              ]
+            },
+            {
+                name: "BAD",
+                id: "BAD",
+                data: [
+                    {% if retweet_dict_bad is defined and retweet_dict_bad|length %}
+                          [
+                              "BAD",
+                               {{ retweet_dict_bad.get("BAD") }}
+                          ],
+                          [
+                              "Null",
+                              {{ retweet_dict_not_worked }}
+                          ]
+                  {% endif %}
+                ]
+            },
+            {
+                name: "TERRIBLE",
+                id: "TERRIBLE",
+                data: [
+                    {% if retweet_dict_terrible is defined and retweet_dict_terrible|length %}
+                          [
+                              "TERRIBLE",
+                              {{ retweet_dict_terrible.get("TERRIBLE") }}
+                          ],
+                          [
+                              "Null",
+                              {{ retweet_dict_not_worked }}
+                          ]
+                  {% endif %}
+                ]
+            },
+            {
+                name: "NORMAL",
+                id: "NORMAL",
+                data: [
+                    {% if retweet_dict_normal is defined and retweet_dict_normal|length %}
+                          [
+                              "NORMAL",
+                              {{ retweet_dict_normal.get("NORMAL") }}
+                          ],
+                          [
+                              "Null",
+                              {{ retweet_dict_not_worked }}
+                          ]
+                  {% endif %}
+                ]
+            },
+        ]
+    }
+});
+</script>
+{% endblock %}

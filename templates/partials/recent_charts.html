@@ -1,0 +1,15 @@
+<div class="container">
+    <div>
+        <h2>The recent searched results</h2>
+          <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+                {% for png in query %}
+                <div class="col mt-3">
+                    <img src="static/images/{{png}}" class="img-fluid" >
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
